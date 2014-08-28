@@ -1,0 +1,36 @@
+{
+  "name": "indent-command",
+  "version": "0.0.0",
+  "description": "Command implementation for cross-browser normalization of the \"indent\" command",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "tsc --module commonjs --declaration index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/webmodules/indent-command.git"
+  },
+  "keywords": [
+    "browser",
+    "command",
+    "interface",
+    "blockquote",
+    "indent"
+  ],
+  "author": "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webmodules/indent-command/issues"
+  },
+  "homepage": "https://github.com/webmodules/indent-command",
+  "dependencies": {
+    "component-closest": "~0.1.4",
+    "current-range": "~1.0.1",
+    "debug": "~1.0.4",
+    "native-command": "~0.1.1"
+  },
+  "devDependencies": {
+    "typescript": "~1.0.1"
+  }
+}
