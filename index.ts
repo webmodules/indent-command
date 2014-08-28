@@ -38,13 +38,23 @@ class IndentCommand extends NativeCommand {
 
   execute(range?: Range, value?: any): void {
     super.execute(range);
+
     if (!range) range = currentRange(this.document);
     if (range) {
-      var blockquote = closest(range.commonAncestorContainer, 'blockquote', true);
-      if (blockquote) {
-        // On Chrome, at least, the BLOCKQUOTE gets created with `margin`,
-        // `border` and `padding` inline style attributes. We must remove them.
-        blockquote.removeAttribute('style');
+      var next: Node = range.commonAncestorContainer;
+      while (next) {
+        var blockquote: HTMLElement = closest(next, 'blockquote', true);
+        if (blockquote) {
+          if (blockquote.hasAttribute('style')) {
+            // On Chrome, at least, the BLOCKQUOTE gets created with `margin`,
+            // `border` and `padding` inline style attributes. We must remove them.
+            debug('removing "style" attribute from BLOCKQUOTE: %o', blockquote);
+            blockquote.removeAttribute('style');
+          }
+          next = blockquote.parentNode;
+        } else {
+          next = null;
+        }
       }
     }
   }
@@ -52,7 +62,7 @@ class IndentCommand extends NativeCommand {
   queryState(range?: Range): boolean {
     if (!range) range = currentRange(this.document);
     if (!range) return false;
-    var blockquote = closest(range.commonAncestorContainer, 'blockquote', true);
+    var blockquote: HTMLElement = closest(range.commonAncestorContainer, 'blockquote', true);
     return !! blockquote;
   }
 }
