@@ -42,7 +42,7 @@ describe('IndentCommand', function () {
         var indent = new IndentCommand();
 
         indent.execute();
-        assert('<blockquote><p>hello</p></blockquote><p>world!</p>' === div.innerHTML);
+        assert.equal('<blockquote><p>hello</p></blockquote><p>world!</p>', div.innerHTML);
       });
 
       it('should insert a second BLOCKQUOTE element when executed twice', function () {
@@ -63,10 +63,10 @@ describe('IndentCommand', function () {
         var indent = new IndentCommand();
 
         indent.execute();
-        assert('<blockquote><p>hello</p></blockquote><p>world!</p>' === div.innerHTML);
+        assert.equal('<blockquote><p>hello</p></blockquote><p>world!</p>', div.innerHTML);
 
         indent.execute();
-        assert('<blockquote><blockquote><p>hello</p></blockquote></blockquote><p>world!</p>' === div.innerHTML);
+        assert.equal('<blockquote><blockquote><p>hello</p></blockquote></blockquote><p>world!</p>', div.innerHTML);
       });
 
     });
