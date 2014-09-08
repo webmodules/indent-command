@@ -34,6 +34,7 @@ describe('IndentCommand', function () {
         var range = document.createRange();
         range.setStart(div.firstChild.firstChild, 1);
         range.setEnd(div.firstChild.firstChild, 1);
+        assert(range.collapsed);
 
         var sel = window.getSelection();
         sel.removeAllRanges();
@@ -55,6 +56,7 @@ describe('IndentCommand', function () {
         var range = document.createRange();
         range.setStart(div.firstChild.firstChild, 1);
         range.setEnd(div.firstChild.firstChild, 1);
+        assert(range.collapsed);
 
         var sel = window.getSelection();
         sel.removeAllRanges();
