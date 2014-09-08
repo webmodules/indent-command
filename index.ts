@@ -48,6 +48,8 @@ class IndentCommand extends NativeCommand {
           if (blockquote.hasAttribute('style')) {
             // On Chrome, at least, the BLOCKQUOTE gets created with `margin`,
             // `border` and `padding` inline style attributes. Remove them.
+            // TODO: more extensive logic to only remove the specific styles,
+            // and then remove the "style" attribute IFF there's no more.
             debug('removing "style" attribute from BLOCKQUOTE: %o', blockquote);
             blockquote.removeAttribute('style');
           }
