@@ -44,6 +44,14 @@ describe('IndentCommand', function () {
 
         indent.execute();
         assert.equal('<blockquote><p>hello</p></blockquote><p>world!</p>', div.innerHTML);
+
+        // test that the Selection remains intact
+        var sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.firstChild.firstChild);
+        assert(range.startOffset === 1);
+        assert(range.endContainer === div.firstChild.firstChild.firstChild);
+        assert(range.endOffset === 1);
       });
 
       it('should insert a second BLOCKQUOTE element when executed twice', function () {
@@ -54,8 +62,8 @@ describe('IndentCommand', function () {
 
         // set current selection
         var range = document.createRange();
-        range.setStart(div.firstChild.firstChild, 1);
-        range.setEnd(div.firstChild.firstChild, 1);
+        range.setStart(div.firstChild.firstChild, 2);
+        range.setEnd(div.firstChild.firstChild, 2);
         assert(range.collapsed);
 
         var sel = window.getSelection();
@@ -69,6 +77,14 @@ describe('IndentCommand', function () {
 
         indent.execute();
         assert.equal('<blockquote><blockquote><p>hello</p></blockquote></blockquote><p>world!</p>', div.innerHTML);
+
+        // test that the Selection remains intact
+        var sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.firstChild.firstChild.firstChild);
+        assert(range.startOffset === 2);
+        assert(range.endContainer === div.firstChild.firstChild.firstChild.firstChild);
+        assert(range.endOffset === 2);
       });
 
       it('should insert a BLOCKQUOTE element around an H2 block', function () {
@@ -79,8 +95,8 @@ describe('IndentCommand', function () {
 
         // set current selection
         var range = document.createRange();
-        range.setStart(div.firstChild.firstChild, 1);
-        range.setEnd(div.firstChild.firstChild, 1);
+        range.setStart(div.firstChild.firstChild, 3);
+        range.setEnd(div.firstChild.firstChild, 3);
         assert(range.collapsed);
 
         var sel = window.getSelection();
@@ -91,6 +107,14 @@ describe('IndentCommand', function () {
 
         indent.execute();
         assert.equal('<blockquote><h2>hello</h2></blockquote><p>world!</p>', div.innerHTML);
+
+        // test that the Selection remains intact
+        var sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.firstChild.firstChild);
+        assert(range.startOffset === 3);
+        assert(range.endContainer === div.firstChild.firstChild.firstChild);
+        assert(range.endOffset === 3);
       });
 
     });
