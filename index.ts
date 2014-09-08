@@ -51,6 +51,15 @@ class IndentCommand extends NativeCommand {
             debug('removing "style" attribute from BLOCKQUOTE: %o', blockquote);
             blockquote.removeAttribute('style');
           }
+
+          if (blockquote.hasAttribute('class')) {
+            // on Safari 5, a "webkit-indent-blockquote" class gets added to
+            // the generated BLOCKQUOTE element. Remove it.
+            // TODO: more extensive logic to only remove the specific class,
+            // and then remove the "class" attribute IFF there's no more.
+            debug('removing "class" attribute from BLOCKQUOTE: %o', blockquote);
+            blockquote.removeAttribute('class');
+          }
           next = blockquote.parentNode;
         } else {
           next = null;
