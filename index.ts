@@ -45,6 +45,14 @@ class IndentCommand extends NativeCommand {
       while (next) {
         var blockquote: HTMLElement = closest(next, 'blockquote', true);
         if (blockquote) {
+          if (blockquote.hasAttribute('dir')) {
+            // IE adds a "dir=ltr" attribute (probably "rtl" on browsers with
+            // appropriate language settings). Not really necessary and
+            // inconsistent with other browsers so remove it.
+            debug('removing "dir" attribute from BLOCKQUOTE: %o', blockquote);
+            blockquote.removeAttribute('dir');
+          }
+
           if (blockquote.hasAttribute('style')) {
             // On Chrome, at least, the BLOCKQUOTE gets created with `margin`,
             // `border` and `padding` inline style attributes. Remove them.
