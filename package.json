@@ -25,9 +25,12 @@
   },
   "homepage": "https://github.com/webmodules/indent-command",
   "dependencies": {
+    "block-elements": "~1.0.0",
     "component-closest": "~0.1.4",
     "current-range": "~1.0.1",
+    "current-selection": "~1.1.0",
     "debug": "~1.0.4",
+    "frozen-range": "~1.0.0",
     "native-command": "~0.1.1"
   },
   "devDependencies": {

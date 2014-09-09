@@ -12,6 +12,9 @@ import NativeCommand = require('native-command');
 
 var closest = require('component-closest');
 var currentRange = require('current-range');
+var currentSelection = require('current-selection');
+var blockSel = require('block-elements').join(', ');
+var FrozenRange = require('frozen-range');
 var debug = require('debug')('indent-command');
 
 /**
@@ -37,45 +40,38 @@ class IndentCommand extends NativeCommand {
   }
 
   execute(range?: Range, value?: any): void {
-    super.execute(range);
-
-    if (!range) range = currentRange(this.document);
-    if (range) {
-      var next: Node = range.commonAncestorContainer;
-      while (next) {
-        var blockquote: HTMLElement = closest(next, 'blockquote', true);
-        if (blockquote) {
-          if (blockquote.hasAttribute('dir')) {
-            // IE adds a "dir=ltr" attribute (probably "rtl" on browsers with
-            // appropriate language settings). Not really necessary and
-            // inconsistent with other browsers so remove it.
-            debug('removing "dir" attribute from BLOCKQUOTE: %o', blockquote);
-            blockquote.removeAttribute('dir');
-          }
-
-          if (blockquote.hasAttribute('style')) {
-            // On Chrome, at least, the BLOCKQUOTE gets created with `margin`,
-            // `border` and `padding` inline style attributes. Remove them.
-            // TODO: more extensive logic to only remove the specific styles,
-            // and then remove the "style" attribute IFF there's no more.
-            debug('removing "style" attribute from BLOCKQUOTE: %o', blockquote);
-            blockquote.removeAttribute('style');
-          }
-
-          if (blockquote.hasAttribute('class')) {
-            // on Safari 5, a "webkit-indent-blockquote" class gets added to
-            // the generated BLOCKQUOTE element. Remove it.
-            // TODO: more extensive logic to only remove the specific class,
-            // and then remove the "class" attribute IFF there's no more.
-            debug('removing "class" attribute from BLOCKQUOTE: %o', blockquote);
-            blockquote.removeAttribute('class');
-          }
-          next = blockquote.parentNode;
-        } else {
-          next = null;
-        }
-      }
+    var hasRange: boolean = !!(range && range instanceof Range);
+    var selection: Selection;
+    if (!hasRange) {
+      selection = currentSelection(this.document);
+      range = currentRange(selection);
     }
+
+    var block: HTMLElement = closest(range.commonAncestorContainer, blockSel, true);
+    debug('closest "block" node: %o', block);
+    if (!block) return;
+
+    var fr = new FrozenRange(range, block);
+
+    var blockquote: HTMLElement = this.document.createElement('blockquote');
+
+    // add BLOCKQUOTE element to the DOM
+    block.parentNode.insertBefore(blockquote, block);
+
+    blockquote.appendChild(block);
+
+    fr.thaw(block, range);
+
+    if (!hasRange) {
+      // when no Range was passed in then we must reset the document's Selection
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
+
+  queryEnabled(range?: Range): boolean {
+    if (!range) range = currentRange(this.document);
+    return !! range;
   }
 
   queryState(range?: Range): boolean {
