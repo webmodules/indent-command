@@ -4,7 +4,7 @@
  * TypeScript dependencies.
  */
 
-import NativeCommand = require('native-command');
+import Command = require('command');
 
 /**
  * JavaScript dependencies.
@@ -32,10 +32,11 @@ var debug = require('debug')('indent-command');
  * @public
  */
 
-class IndentCommand extends NativeCommand {
+class IndentCommand implements Command {
+  public document: Document;
 
-  constructor(doc?: Document) {
-    super('indent', doc);
+  constructor(doc: Document = document) {
+    this.document = doc;
     debug('created IndentCommand: document %o', this.document);
   }
 

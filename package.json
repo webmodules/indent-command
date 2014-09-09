@@ -30,8 +30,7 @@
     "current-range": "~1.1.0",
     "current-selection": "~1.1.0",
     "debug": "~1.0.4",
-    "frozen-range": "~1.0.0",
-    "native-command": "~0.1.1"
+    "frozen-range": "~1.0.0"
   },
   "devDependencies": {
     "typescript": "~1.0.1",
