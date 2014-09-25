@@ -14,6 +14,7 @@ var closest = require('component-closest');
 var currentRange = require('current-range');
 var currentSelection = require('current-selection');
 var blockSel = require('block-elements').join(', ');
+var domIterator = require('dom-iterator');
 var FrozenRange = require('frozen-range');
 var debug = require('debug')('indent-command');
 
@@ -43,6 +44,7 @@ class IndentCommand implements Command {
   execute(range?: Range, value?: any): void {
     var hasRange: boolean = !!(range && range instanceof Range);
     var selection: Selection;
+
     if (!hasRange) {
       selection = currentSelection(this.document);
       range = currentRange(selection);
@@ -78,8 +80,24 @@ class IndentCommand implements Command {
   queryState(range?: Range): boolean {
     if (!range) range = currentRange(this.document);
     if (!range) return false;
-    var blockquote: HTMLElement = closest(range.commonAncestorContainer, 'blockquote', true);
-    return !! blockquote;
+
+    var next = range.startContainer;
+    var end = range.endContainer;
+    var iterator = domIterator(next).revisit(false);
+
+    while (next) {
+      var blockquote: HTMLElement = closest(next, 'blockquote', true);
+      if (!blockquote) {
+        return false;
+      }
+      // TODO: move to `node-contains` polyfill module:
+      // See: http://compatibility.shwups-cms.ch/en/polyfills/?&id=1
+      if (next === end || !!(end.compareDocumentPosition(next) & 16)) break;
+      //if (end.contains(next)) break;
+      next = iterator.next(3 /* Node.TEXT_NODE */);
+    }
+
+    return true;
   }
 }
 
