@@ -119,6 +119,40 @@ describe('IndentCommand', function () {
 
     });
 
+    describe('queryEnabled()', function () {
+
+      it('should return `true` when the selection is within a `contenteditable`', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p>hello</p><p>world!</p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild, 1);
+        range.setEnd(div.firstChild.firstChild, 1);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert(indent.queryEnabled());
+      });
+
+      it('should return `false` when there is no selection', function () {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+
+        var indent = new IndentCommand();
+
+        assert(!indent.queryEnabled());
+      });
+
+    });
+
   });
 
 });
