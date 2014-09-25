@@ -153,6 +153,52 @@ describe('IndentCommand', function () {
 
     });
 
+    describe('queryState()', function () {
+
+      it('should return `true` when selection is within a BLOCKQUOTE', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<blockquote><p>hello</p></blockquote>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild.firstChild, 1);
+        range.setEnd(div.firstChild.firstChild.firstChild, 1);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert(indent.queryState());
+      });
+
+      it('should return `true` when selection is within multiple BLOCKQUOTEs', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<blockquote><p>hello</p></blockquote><blockquote><p>world</p></blockquote>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild.firstChild, 1);
+        range.setEnd(div.lastChild.firstChild.firstChild, 3);
+        assert(!range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert(indent.queryState());
+      });
+
+    });
+
   });
 
 });
