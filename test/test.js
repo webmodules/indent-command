@@ -117,6 +117,37 @@ describe('IndentCommand', function () {
         assert(range.endOffset === 3);
       });
 
+      it('should insert BLOCKQUOTE elements around multiple P blocks', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p>hel<b>lo</b></p><p>world!</p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild, 1);
+        range.setEnd(div.lastChild.firstChild, 4);
+        assert(!range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        indent.execute();
+
+        assert.equal('<blockquote><p>hel<b>lo</b></p></blockquote><blockquote><p>world!</p></blockquote>', div.innerHTML);
+
+        // test that the Selection remains intact
+        var sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.firstChild.firstChild);
+        assert(range.startOffset === 1);
+        assert(range.endContainer === div.lastChild.firstChild.firstChild);
+        assert(range.endOffset === 4);
+      });
+
     });
 
     describe('queryEnabled()', function () {
