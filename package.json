@@ -30,7 +30,7 @@
     "component-query": "0.0.3",
     "current-range": "~1.1.0",
     "current-selection": "~1.1.0",
-    "debug": "~1.0.4",
+    "debug": "~2.0.0",
     "dom-iterator": "~0.3.0",
     "frozen-range": "~1.0.0"
   },
