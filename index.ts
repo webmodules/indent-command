@@ -84,13 +84,14 @@ class IndentCommand implements Command {
       next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
-    var b = common.nodeType !== 3 && query('blockquote', common);
+    var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', common);
     if (b) {
       // XXX: basically since we know that the selection must be within a
       // <blockquote> now, so the selection is one layer deeper now. We insert
       // a new `0` entry at index `1` of both start and end path arrays. The
       // only thing that seems fragile here is the hard-coded `1` index, which
       // could be problematic.
+      debug('inserting %o entry at index %o for startPath and endPath', 0, 1);
       fr.startPath.splice(1, 0, 0);
       fr.endPath.splice(1, 0, 0);
     }
