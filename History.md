@@ -1,4 +1,13 @@
 
+2.0.1 / 2014-09-26
+==================
+
+ * index: add debug() call
+ * index: implement multi-block selection logic for execute()
+ * index: use `dom-iteratore` for queryState()
+ * test: add true `queryState()` tests
+ * test: add quick `queryEnabled()` tests
+
 2.0.0 / 2014-09-08
 ==================
 
