@@ -62,6 +62,8 @@ class IndentCommand implements Command {
     var end = range.endContainer;
     var iterator = domIterator(next).revisit(false);
 
+    var blockquote: HTMLElement = this.document.createElement('blockquote');
+
     while (next) {
       var block: HTMLElement = closest(next, blockSel, true);
       debug('closest "block" node: %o', block);
@@ -69,10 +71,10 @@ class IndentCommand implements Command {
       if (block && -1 === blocks.indexOf(block)) {
         blocks.push(block);
 
-        var blockquote: HTMLElement = this.document.createElement('blockquote');
-
-        // add BLOCKQUOTE element to the DOM
-        block.parentNode.insertBefore(blockquote, block);
+        // add BLOCKQUOTE element to the DOM, only once
+        if (!blockquote.parentNode) {
+          block.parentNode.insertBefore(blockquote, block);
+        }
 
         blockquote.appendChild(block);
       }
@@ -86,14 +88,16 @@ class IndentCommand implements Command {
 
     var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', common);
     if (b) {
-      // XXX: basically since we know that the selection must be within a
-      // <blockquote> now, so the selection is one layer deeper now. We insert
-      // a new `0` entry at index `1` of both start and end path arrays. The
-      // only thing that seems fragile here is the hard-coded `1` index, which
-      // could be problematic.
-      debug('inserting %o entry at index %o for startPath and endPath', 0, 1);
-      fr.startPath.splice(1, 0, 0);
-      fr.endPath.splice(1, 0, 0);
+      // XXX: since we know that the selection must be within a <blockquote> now,
+      // an easy was to handle it is to "rebase" the frozen range onto the
+      // BLOCKQUOTE element. The tricky part is that we need to adjust the
+      // startPath and endPath first entries to be relative to the BLOCKQUOTE
+      // instead of the original parent.
+      var min = Math.min(fr.startPath[0], fr.endPath[0]);
+      debug('subtracting %o from startPath[0] and endPath[0]', min);
+      fr.startPath[0] -= min;
+      fr.endPath[0] -= min;
+      common = blockquote;
     }
 
     fr.thaw(common, range);

@@ -117,16 +117,16 @@ describe('IndentCommand', function () {
         assert(range.endOffset === 3);
       });
 
-      it('should insert BLOCKQUOTE elements around multiple P blocks', function () {
+      it('should insert a single BLOCKQUOTE element around multiple P blocks', function () {
         div = document.createElement('div');
-        div.innerHTML = '<p>hel<b>lo</b></p><p>world!</p>';
+        div.innerHTML = '<p>wat</p><p>hel<b>lo</b></p><p>world!</p><p>woah</p>';
         div.setAttribute('contenteditable', 'true');
         document.body.appendChild(div);
 
         // set current selection
         var range = document.createRange();
-        range.setStart(div.firstChild.firstChild, 1);
-        range.setEnd(div.lastChild.firstChild, 4);
+        range.setStart(div.childNodes[1].firstChild, 1);
+        range.setEnd(div.childNodes[2].firstChild, 4);
         assert(!range.collapsed);
 
         var sel = window.getSelection();
@@ -137,14 +137,14 @@ describe('IndentCommand', function () {
 
         indent.execute();
 
-        assert.equal('<blockquote><p>hel<b>lo</b></p></blockquote><blockquote><p>world!</p></blockquote>', div.innerHTML);
+        assert.equal('<p>wat</p><blockquote><p>hel<b>lo</b></p><p>world!</p></blockquote><p>woah</p>', div.innerHTML);
 
         // test that the Selection remains intact
         var sel = window.getSelection();
         range = sel.getRangeAt(0);
-        assert(range.startContainer === div.firstChild.firstChild.firstChild);
+        assert(range.startContainer === div.childNodes[1].firstChild.firstChild);
         assert(range.startOffset === 1);
-        assert(range.endContainer === div.lastChild.firstChild.firstChild);
+        assert(range.endContainer === div.childNodes[1].lastChild.firstChild);
         assert(range.endOffset === 4);
       });
 
