@@ -1,4 +1,10 @@
 
+2.1.0 / 2014-09-27
+==================
+
+ * index: only create one BLOCKQUOTE element in `execute()`
+ * test: add nested multiple P blocks test
+
 2.0.2 / 2014-09-26
 ==================
 
