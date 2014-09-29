@@ -46,7 +46,7 @@ describe('IndentCommand', function () {
         assert.equal('<blockquote><p>hello</p></blockquote><p>world!</p>', div.innerHTML);
 
         // test that the Selection remains intact
-        var sel = window.getSelection();
+        sel = window.getSelection();
         range = sel.getRangeAt(0);
         assert(range.startContainer === div.firstChild.firstChild.firstChild);
         assert(range.startOffset === 1);
@@ -79,7 +79,7 @@ describe('IndentCommand', function () {
         assert.equal('<blockquote><blockquote><p>hello</p></blockquote></blockquote><p>world!</p>', div.innerHTML);
 
         // test that the Selection remains intact
-        var sel = window.getSelection();
+        sel = window.getSelection();
         range = sel.getRangeAt(0);
         assert(range.startContainer === div.firstChild.firstChild.firstChild.firstChild);
         assert(range.startOffset === 2);
@@ -109,7 +109,7 @@ describe('IndentCommand', function () {
         assert.equal('<blockquote><h2>hello</h2></blockquote><p>world!</p>', div.innerHTML);
 
         // test that the Selection remains intact
-        var sel = window.getSelection();
+        sel = window.getSelection();
         range = sel.getRangeAt(0);
         assert(range.startContainer === div.firstChild.firstChild.firstChild);
         assert(range.startOffset === 3);
@@ -139,7 +139,7 @@ describe('IndentCommand', function () {
         assert.equal('<p>wat</p><blockquote><p>hel<b>lo</b></p><p>world!</p></blockquote><p>woah</p>', div.innerHTML);
 
         // test that the Selection remains intact
-        var sel = window.getSelection();
+        sel = window.getSelection();
         range = sel.getRangeAt(0);
         assert(range.startContainer === div.childNodes[1].firstChild.firstChild);
         assert(range.startOffset === 1);
@@ -172,7 +172,7 @@ describe('IndentCommand', function () {
         assert.equal('<p>wat</p><blockquote><blockquote><p>hel<b>lo</b></p><p>world!</p></blockquote></blockquote><p>woah</p>', div.innerHTML);
 
         // test that the Selection remains intact
-        var sel = window.getSelection();
+        sel = window.getSelection();
         range = sel.getRangeAt(0);
         assert(range.startContainer === div.childNodes[1].firstChild.firstChild.firstChild);
         assert(range.startOffset === 2);
@@ -207,7 +207,7 @@ describe('IndentCommand', function () {
       });
 
       it('should return `false` when there is no selection', function () {
-        var sel = window.getSelection();
+        sel = window.getSelection();
         sel.removeAllRanges();
 
         var indent = new IndentCommand();
@@ -252,7 +252,7 @@ describe('IndentCommand', function () {
         range.setEnd(div.lastChild.firstChild.firstChild, 3);
         assert(!range.collapsed);
 
-        var sel = window.getSelection();
+        sel = window.getSelection();
         sel.removeAllRanges();
         sel.addRange(range);
 
