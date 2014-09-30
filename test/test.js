@@ -207,7 +207,7 @@ describe('IndentCommand', function () {
       });
 
       it('should return `false` when there is no selection', function () {
-        sel = window.getSelection();
+        var sel = window.getSelection();
         sel.removeAllRanges();
 
         var indent = new IndentCommand();
@@ -252,7 +252,7 @@ describe('IndentCommand', function () {
         range.setEnd(div.lastChild.firstChild.firstChild, 3);
         assert(!range.collapsed);
 
-        sel = window.getSelection();
+        var sel = window.getSelection();
         sel.removeAllRanges();
         sel.addRange(range);
 
