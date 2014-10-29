@@ -14,6 +14,7 @@ var setRange = require('selection-set-range');
 var isBackward = require('selection-is-backward');
 var closest = require('component-closest');
 var query = require('component-query');
+var contains = require('node-contains');
 var currentRange = require('current-range');
 var currentSelection = require('current-selection');
 var blockSel = require('block-elements').join(', ');
@@ -83,10 +84,7 @@ class IndentCommand implements Command {
         blockquote.appendChild(block);
       }
 
-      // TODO: move to `node-contains` polyfill module:
-      // See: http://compatibility.shwups-cms.ch/en/polyfills/?&id=1
-      if (next === end || !!(end.compareDocumentPosition(next) & 16)) break;
-      //if (end.contains(next)) break;
+      if (contains(end, next)) break;
       next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
@@ -130,10 +128,7 @@ class IndentCommand implements Command {
       if (!blockquote) {
         return false;
       }
-      // TODO: move to `node-contains` polyfill module:
-      // See: http://compatibility.shwups-cms.ch/en/polyfills/?&id=1
-      if (next === end || !!(end.compareDocumentPosition(next) & 16)) break;
-      //if (end.contains(next)) break;
+      if (contains(end, next)) break;
       next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
