@@ -10,6 +10,8 @@ import Command = require('command');
  * JavaScript dependencies.
  */
 
+var setRange = require('selection-set-range');
+var isBackward = require('selection-is-backward');
 var closest = require('component-closest');
 var query = require('component-query');
 var currentRange = require('current-range');
