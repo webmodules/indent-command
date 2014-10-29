@@ -1,4 +1,15 @@
 
+2.1.1 / 2014-10-29
+==================
+
+ * index: use "node-contains"
+ * index: add missing require() calls
+ * index: add support for backwards Selections
+ * index: use better TypeScript array syntax
+ * package: allow any debug v2
+ * test: fix global `sel` variable leak
+ * test: remove redundant `var sel` variables
+
 2.1.0 / 2014-09-27
 ==================
 
