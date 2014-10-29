@@ -44,10 +44,12 @@ class IndentCommand implements Command {
 
   execute(range?: Range, value?: any): void {
     var hasRange: boolean = !!(range && range instanceof Range);
+    var backward: boolean;
     var selection: Selection;
 
     if (!hasRange) {
       selection = currentSelection(this.document);
+      backward = isBackward(selection);
       range = currentRange(selection);
     }
 
@@ -104,8 +106,7 @@ class IndentCommand implements Command {
 
     if (!hasRange) {
       // when no Range was passed in then we must reset the document's Selection
-      selection.removeAllRanges();
-      selection.addRange(range);
+      setRange(selection, range, backward);
     }
   }
 
