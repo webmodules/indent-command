@@ -53,7 +53,7 @@ class IndentCommand implements Command {
 
     // array to ensure that we only process a particular block node once
     // (in the instance that it has multiple text node children)
-    var blocks: Array<HTMLElement> = [];
+    var blocks: HTMLElement[] = [];
 
     var common = range.commonAncestorContainer;
     var fr = new FrozenRange(range, common);
