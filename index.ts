@@ -1,26 +1,20 @@
-/// <reference path='require.d.ts' />
+/// <reference path='types.d.ts' />
 
 /**
  * TypeScript dependencies.
  */
 
-import Command = require('command');
+import AbstractCommand = require('abstract-command');
+import closest = require('component-closest');
+import DomIterator = require('dom-iterator');
+import query = require('component-query');
+import contains = require('node-contains');
+import blockElements = require('block-elements');
+import FrozenRange = require('frozen-range');
+import DEBUG = require('debug');
 
-/**
- * JavaScript dependencies.
- */
-
-var setRange = require('selection-set-range');
-var isBackward = require('selection-is-backward');
-var closest = require('component-closest');
-var query = require('component-query');
-var contains = require('node-contains');
-var currentRange = require('current-range');
-var currentSelection = require('current-selection');
-var blockSel = require('block-elements').join(', ');
-var domIterator = require('dom-iterator');
-var FrozenRange = require('frozen-range');
-var debug = require('debug')('indent-command');
+var debug = DEBUG('indent-command');
+var blockSel = blockElements.join(', ');
 
 /**
  * `IndentCommand` class is a wrapper around the `indent` native command.
@@ -37,24 +31,14 @@ var debug = require('debug')('indent-command');
  * @public
  */
 
-class IndentCommand implements Command {
-  public document: Document;
+class IndentCommand extends AbstractCommand {
 
   constructor(doc: Document = document) {
-    this.document = doc;
+    super(doc);
     debug('created IndentCommand: document %o', this.document);
   }
 
-  execute(range?: Range, value?: any): void {
-    var hasRange: boolean = !!(range && range instanceof Range);
-    var backward: boolean;
-    var selection: Selection;
-
-    if (!hasRange) {
-      selection = currentSelection(this.document);
-      backward = isBackward(selection);
-      range = currentRange(selection);
-    }
+  protected _execute(range: Range, value?: any): void {
 
     // array to ensure that we only process a particular block node once
     // (in the instance that it has multiple text node children)
@@ -65,7 +49,7 @@ class IndentCommand implements Command {
 
     var next = range.startContainer;
     var end = range.endContainer;
-    var iterator = domIterator(next).revisit(false);
+    var iterator = new DomIterator(next).revisit(false);
 
     var blockquote: HTMLElement = this.document.createElement('blockquote');
 
@@ -88,7 +72,7 @@ class IndentCommand implements Command {
       next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
-    var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', common);
+    var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', <HTMLElement>common);
     if (b) {
       // XXX: since we know that the selection must be within a <blockquote> now,
       // an easy was to handle it is to "rebase" the frozen range onto the
@@ -103,25 +87,12 @@ class IndentCommand implements Command {
     }
 
     fr.thaw(common, range);
-
-    if (!hasRange) {
-      // when no Range was passed in then we must reset the document's Selection
-      setRange(selection, range, backward);
-    }
   }
 
-  queryEnabled(range?: Range): boolean {
-    if (!range) range = currentRange(this.document);
-    return !! range;
-  }
-
-  queryState(range?: Range): boolean {
-    if (!range) range = currentRange(this.document);
-    if (!range) return false;
-
+  protected _queryState(range: Range): boolean {
     var next = range.startContainer;
     var end = range.endContainer;
-    var iterator = domIterator(next).revisit(false);
+    var iterator = new DomIterator(next).revisit(false);
 
     while (next) {
       var blockquote: HTMLElement = closest(next, 'blockquote', true);
