@@ -180,6 +180,37 @@ describe('IndentCommand', function () {
         assert(range.endOffset === 3);
       });
 
+      it('should insert a BLOCKQUOTE element in between 2 other BLOCKQUOTE elements', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<div><blockquote><p>one</p></blockquote><p>two</p><blockquote><p>three</p></blockquote></div><div>foo!!!</div>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.childNodes[1].firstChild, 1);
+        range.setEnd(div.firstChild.childNodes[1].firstChild, 1);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        indent.execute();
+
+        assert.equal('<div><blockquote><p>one</p></blockquote><blockquote><p>two</p></blockquote><blockquote><p>three</p></blockquote></div><div>foo!!!</div>', div.innerHTML);
+
+        // test that the Selection remains intact
+        sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.childNodes[1].firstChild.firstChild);
+        assert(range.startOffset === 1);
+        assert(range.endContainer === div.firstChild.childNodes[1].firstChild.firstChild);
+        assert(range.endOffset === 1);
+      });
+
 
     });
 
