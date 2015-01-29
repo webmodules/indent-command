@@ -17,9 +17,7 @@ var debug = DEBUG('indent-command');
 var blockSel = blockElements.join(', ');
 
 /**
- * `IndentCommand` class is a wrapper around the `indent` native command.
- * It applies cross-browser normalization logic, for example, removing any
- * inline "style" attributes from the created BLOCKQUOTE element.
+ * `IndentCommand` class wraps a BLOCKQUOTE element around the given `Range`.
  *
  * ``` js
  * var indent = new IndentCommand();
