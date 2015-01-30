@@ -7,6 +7,7 @@
 import AbstractCommand = require('abstract-command');
 import closest = require('component-closest');
 import DomIterator = require('dom-iterator');
+import RangeIterator = require('range-iterator');
 import query = require('component-query');
 import contains = require('node-contains');
 import blockElements = require('block-elements');
@@ -88,20 +89,18 @@ class IndentCommand extends AbstractCommand {
   }
 
   protected _queryState(range: Range): boolean {
-    var next = range.startContainer;
-    var end = range.endContainer;
-    var iterator = new DomIterator(next).revisit(false);
+    var next: Node;
+    var count: number = 0;
+    var iterator = new RangeIterator(range)
+      .revisit(false);
 
-    while (next) {
+    while (next = iterator.next()) {
+      count++;
       var blockquote: HTMLElement = closest(next, 'blockquote', true);
-      if (!blockquote) {
-        return false;
-      }
-      if (contains(end, next)) break;
-      next = iterator.next(3 /* Node.TEXT_NODE */);
+      if (!blockquote) return false;
     }
 
-    return true;
+    return count > 0;
   }
 }
 

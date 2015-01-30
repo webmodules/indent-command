@@ -250,6 +250,27 @@ describe('IndentCommand', function () {
 
     describe('queryState()', function () {
 
+      it('should return `false` when selection has no content', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p><br></p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild, 0);
+        range.setEnd(div.firstChild, 0);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert.equal(false, indent.queryState());
+      });
+
       it('should return `false` when selection is NOT within a BLOCKQUOTE', function () {
         div = document.createElement('div');
         div.innerHTML = '<p>hello</p>';

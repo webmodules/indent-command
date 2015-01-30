@@ -98,3 +98,15 @@ declare module "node-contains" {
   function contains(node: Node, other: Node): boolean;
   export = contains;
 }
+
+declare module "range-iterator" {
+  import DomIterator = require('dom-iterator');
+  class RangeIterator extends DomIterator {
+    startContainer: Node;
+    endContainer: Node;
+    constructor(range: Range);
+    selects(node: Node, peek: boolean): boolean;
+    withinRange(node: Node): boolean;
+  }
+  export = RangeIterator;
+}
