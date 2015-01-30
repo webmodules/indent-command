@@ -250,6 +250,27 @@ describe('IndentCommand', function () {
 
     describe('queryState()', function () {
 
+      it('should return `false` when selection is NOT within a BLOCKQUOTE', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p>hello</p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild, 1);
+        range.setEnd(div.firstChild.firstChild, 1);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert.equal(false, indent.queryState());
+      });
+
       it('should return `true` when selection is within a BLOCKQUOTE', function () {
         div = document.createElement('div');
         div.innerHTML = '<blockquote><p>hello</p></blockquote>';
@@ -268,7 +289,7 @@ describe('IndentCommand', function () {
 
         var indent = new IndentCommand();
 
-        assert(indent.queryState());
+        assert.equal(true, indent.queryState());
       });
 
       it('should return `true` when selection is within multiple BLOCKQUOTEs', function () {
@@ -289,7 +310,7 @@ describe('IndentCommand', function () {
 
         var indent = new IndentCommand();
 
-        assert(indent.queryState());
+        assert.equal(true, indent.queryState());
       });
 
     });
