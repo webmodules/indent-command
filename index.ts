@@ -6,10 +6,8 @@
 
 import AbstractCommand = require('abstract-command');
 import closest = require('component-closest');
-import DomIterator = require('dom-iterator');
 import RangeIterator = require('range-iterator');
 import query = require('component-query');
-import contains = require('node-contains');
 import blockElements = require('block-elements');
 import FrozenRange = require('frozen-range');
 import DEBUG = require('debug');

@@ -30,9 +30,7 @@
     "component-closest": "~0.1.4",
     "component-query": "0.0.3",
     "debug": "2",
-    "dom-iterator": "~0.3.0",
     "frozen-range": "~1.0.0",
-    "node-contains": "~1.0.0",
     "range-iterator": "~1.0.1"
   },
   "devDependencies": {

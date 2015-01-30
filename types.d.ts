@@ -94,11 +94,6 @@ declare module "frozen-range" {
   export = FrozenRange;
 }
 
-declare module "node-contains" {
-  function contains(node: Node, other: Node): boolean;
-  export = contains;
-}
-
 declare module "range-iterator" {
   import DomIterator = require('dom-iterator');
   class RangeIterator extends DomIterator {
