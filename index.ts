@@ -46,13 +46,13 @@ class IndentCommand extends AbstractCommand {
     var common = range.commonAncestorContainer;
     var fr = new FrozenRange(range, common);
 
-    var next = range.startContainer;
-    var end = range.endContainer;
-    var iterator = new DomIterator(next).revisit(false);
+    var next: Node;
+    var iterator = new RangeIterator(range)
+      .revisit(false);
 
     var blockquote: HTMLElement = this.document.createElement('blockquote');
 
-    while (next) {
+    while (next = iterator.next()) {
       var block: HTMLElement = closest(next, blockSel, true);
       debug('closest "block" node: %o', block);
 
@@ -67,7 +67,6 @@ class IndentCommand extends AbstractCommand {
         blockquote.appendChild(block);
       }
 
-      if (contains(end, next)) break;
       next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
