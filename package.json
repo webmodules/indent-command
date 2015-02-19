@@ -30,7 +30,8 @@
     "component-closest": "~0.1.4",
     "component-query": "0.0.3",
     "debug": "2",
-    "range-iterator": "~1.0.1"
+    "range-iterator": "~1.0.1",
+    "node-contains": "1.0.0"
   },
   "devDependencies": {
     "typescript": "~1.4.1",
