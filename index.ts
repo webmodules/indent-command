@@ -10,6 +10,7 @@ import RangeIterator = require('range-iterator');
 import query = require('component-query');
 import blockElements = require('block-elements');
 import DEBUG = require('debug');
+import contains = require('node-contains');
 
 var debug = DEBUG('indent-command');
 var blockSel = blockElements.join(', ');
@@ -29,8 +30,11 @@ var blockSel = blockElements.join(', ');
 
 class IndentCommand extends AbstractCommand {
 
-  constructor(doc: Document = document) {
+  private root: HTMLElement;
+
+  constructor(root: HTMLElement = document.documentElement, doc: Document = root.ownerDocument) {
     super(doc);
+    this.root = root;
     debug('created IndentCommand: document %o', this.document);
   }
 
@@ -48,9 +52,14 @@ class IndentCommand extends AbstractCommand {
 
     var blockquote: HTMLElement = this.document.createElement('blockquote');
 
-    while (next = iterator.next((node) => (node.childNodes.length == 0))) {
+    while (next = iterator.next((node) => (node.childNodes.length == 0 && contains(this.root, node)))) {
       var block: HTMLElement = closest(next, blockSel, true);
       debug('closest "block" node: %o', block);
+
+      if (block == this.root || !contains(this.root, block)) {
+        debug('sanity check failed, "block" node is not inside the specified root. skipping');
+        continue;
+      }
 
       if (block && -1 === blocks.indexOf(block)) {
         blocks.push(block);
