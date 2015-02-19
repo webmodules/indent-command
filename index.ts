@@ -50,7 +50,7 @@ class IndentCommand extends AbstractCommand {
 
     var blockquote: HTMLElement = this.document.createElement('blockquote');
 
-    while (next = iterator.next()) {
+    while (next = iterator.next((node) => (node.childNodes.length == 0))) {
       var block: HTMLElement = closest(next, blockSel, true);
       debug('closest "block" node: %o', block);
 
@@ -64,8 +64,6 @@ class IndentCommand extends AbstractCommand {
 
         blockquote.appendChild(block);
       }
-
-      next = iterator.next(3 /* Node.TEXT_NODE */);
     }
 
     var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', <HTMLElement>common);
