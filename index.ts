@@ -45,6 +45,10 @@ class IndentCommand extends AbstractCommand {
     var blocks: HTMLElement[] = [];
 
     var common = range.commonAncestorContainer;
+    var startContainer = range.startContainer;
+    var startOffset = range.startOffset;
+    var endContainer = range.endContainer;
+    var endOffset = range.endOffset;
 
     var next: Node;
     var iterator = new RangeIterator(range)
@@ -72,6 +76,9 @@ class IndentCommand extends AbstractCommand {
         blockquote.appendChild(block);
       }
     }
+
+    range.setStart(startContainer, startOffset);
+    range.setEnd(endContainer, endOffset);
   }
 
   protected _queryState(range: Range): boolean {
