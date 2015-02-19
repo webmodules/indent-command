@@ -23,6 +23,12 @@ declare module "debug" {
   export = debug;
 }
 
+declare module "node-contains" {
+  function contains(node: Node, other: Node): boolean;
+  export = contains;
+}
+
+
 declare module "dom-iterator" {
   class Iterator {
     constructor(node: Node, root?: Node);
