@@ -9,7 +9,6 @@ import closest = require('component-closest');
 import RangeIterator = require('range-iterator');
 import query = require('component-query');
 import blockElements = require('block-elements');
-import FrozenRange = require('frozen-range');
 import DEBUG = require('debug');
 
 var debug = DEBUG('indent-command');
@@ -42,7 +41,6 @@ class IndentCommand extends AbstractCommand {
     var blocks: HTMLElement[] = [];
 
     var common = range.commonAncestorContainer;
-    var fr = new FrozenRange(range, common);
 
     var next: Node;
     var iterator = new RangeIterator(range)
@@ -65,22 +63,6 @@ class IndentCommand extends AbstractCommand {
         blockquote.appendChild(block);
       }
     }
-
-    var b = common.nodeType !== 3 /* Node.TEXT_NODE */ && query('blockquote', <HTMLElement>common);
-    if (b) {
-      // XXX: since we know that the selection must be within a <blockquote> now,
-      // an easy was to handle it is to "rebase" the frozen range onto the
-      // BLOCKQUOTE element. The tricky part is that we need to adjust the
-      // startPath and endPath first entries to be relative to the BLOCKQUOTE
-      // instead of the original parent.
-      var min = Math.min(fr.startPath[0], fr.endPath[0]);
-      debug('subtracting %o from startPath[0] and endPath[0]', min);
-      fr.startPath[0] -= min;
-      fr.endPath[0] -= min;
-      common = blockquote;
-    }
-
-    fr.thaw(common, range);
   }
 
   protected _queryState(range: Range): boolean {
