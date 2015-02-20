@@ -1,4 +1,25 @@
 
+3.0.0 / 2015-02-19
+==================
+
+  * store and restore range
+  * add type declaration for node-contains
+  * add filter and sanity check to constrain command to root element
+  * remove "frozen-range" usage
+  * remove unused "dom-iterator" and "node-contains" modules
+  * fix iteration
+  * use "range-iterator" for `_execute()`
+  * use "range-iterator" for `_queryState()`
+  * types: even more accurate "dom-iterator" type definition
+  * index: update jsdoc description
+  * package: update "typescript" to v1.4.1
+  * package: allow any "zuul" v1
+  * package.json: add "node-contains" dep
+  * types: more correct "dom-iterator" definition
+  * test: add another test case
+  * test: add another `queryState()` test case
+  * refactor to extend `AbstractCommand` base class
+
 2.1.1 / 2014-10-29
 ==================
 
