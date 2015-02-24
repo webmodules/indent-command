@@ -9,8 +9,8 @@ import closest = require('component-closest');
 import RangeIterator = require('range-iterator');
 import query = require('component-query');
 import blockElements = require('block-elements');
-import DEBUG = require('debug');
 import contains = require('node-contains');
+import DEBUG = require('debug');
 
 var debug = DEBUG('indent-command');
 var blockSel = blockElements.join(', ');
@@ -38,6 +38,31 @@ class IndentCommand extends AbstractCommand {
     debug('created IndentCommand: document %o', this.document);
   }
 
+  public createElement(): HTMLElement {
+    return this.document.createElement('blockquote');
+  }
+
+  public wrapNode(node: Node, blockquote: HTMLElement, blocks: HTMLElement[]) {
+    var block: HTMLElement = closest(node, blockSel, true, this.root);
+    debug('closest "block" node: %o', block);
+
+    if (block == this.root || !contains(this.root, block)) {
+      debug('sanity check failed, "block" node is not inside the specified root. skipping');
+      return;
+    }
+
+    if (block && -1 === blocks.indexOf(block)) {
+      blocks.push(block);
+
+      // add BLOCKQUOTE element to the DOM, only once
+      if (!blockquote.parentNode) {
+        block.parentNode.insertBefore(blockquote, block);
+      }
+
+      blockquote.appendChild(block);
+    }
+  }
+
   protected _execute(range: Range, value?: any): void {
 
     // array to ensure that we only process a particular block node once
@@ -50,30 +75,18 @@ class IndentCommand extends AbstractCommand {
     var endContainer = range.endContainer;
     var endOffset = range.endOffset;
 
+    var blockquote: HTMLElement = this.createElement();
     var next: Node;
-    var iterator = new RangeIterator(range)
-      .revisit(false);
 
-    var blockquote: HTMLElement = this.document.createElement('blockquote');
+    if (range.collapsed) {
+      this.wrapNode(range.endContainer, blockquote, blocks);
+    } else {
+      var iterator = new RangeIterator(range)
+        .select( (node) => (node.childNodes.length === 0 && contains(this.root, node)) )
+        .revisit(false);
 
-    while (next = iterator.next((node) => (node.childNodes.length == 0 && contains(this.root, node)))) {
-      var block: HTMLElement = closest(next, blockSel, true);
-      debug('closest "block" node: %o', block);
-
-      if (block == this.root || !contains(this.root, block)) {
-        debug('sanity check failed, "block" node is not inside the specified root. skipping');
-        continue;
-      }
-
-      if (block && -1 === blocks.indexOf(block)) {
-        blocks.push(block);
-
-        // add BLOCKQUOTE element to the DOM, only once
-        if (!blockquote.parentNode) {
-          block.parentNode.insertBefore(blockquote, block);
-        }
-
-        blockquote.appendChild(block);
+      while (next = iterator.next()) {
+        this.wrapNode(next, blockquote, blocks);
       }
     }
 
@@ -82,18 +95,25 @@ class IndentCommand extends AbstractCommand {
   }
 
   protected _queryState(range: Range): boolean {
-    var next: Node;
-    var count: number = 0;
-    var iterator = new RangeIterator(range)
-      .revisit(false);
+    var blockquote: HTMLElement;
+    if (range.collapsed) {
+      blockquote = closest(range.endContainer, 'blockquote', true, this.root);
+      return !!blockquote;
+    } else {
+      var next: Node;
+      var count: number = 0;
+      var iterator = new RangeIterator(range)
+        .select( (node) => (node.childNodes.length === 0 && contains(this.root, node)) )
+        .revisit(false);
 
-    while (next = iterator.next()) {
-      count++;
-      var blockquote: HTMLElement = closest(next, 'blockquote', true);
-      if (!blockquote) return false;
+      while (next = iterator.next()) {
+        count++;
+        blockquote = closest(next, 'blockquote', true, this.root);
+        if (!blockquote) return false;
+      }
+
+      return count > 0;
     }
-
-    return count > 0;
   }
 }
 

@@ -54,6 +54,36 @@ describe('IndentCommand', function () {
         assert(range.endOffset === 1);
       });
 
+      it('should insert a BLOCKQUOTE element around parent block with a BR', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p><br></p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild, 0);
+        range.setEnd(div.firstChild, 0);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        indent.execute();
+        assert.equal('<blockquote><p><br></p></blockquote>', div.innerHTML);
+
+        // test that the Selection remains intact
+        sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(range.startContainer === div.firstChild.firstChild);
+        assert(range.startOffset === 0);
+        assert(range.endContainer === div.firstChild.firstChild);
+        assert(range.endOffset === 0);
+      });
+
       it('should insert a second BLOCKQUOTE element when executed twice', function () {
         div = document.createElement('div');
         div.innerHTML = '<p>hello</p><p>world!</p>';
@@ -302,6 +332,27 @@ describe('IndentCommand', function () {
         var range = document.createRange();
         range.setStart(div.firstChild.firstChild.firstChild, 1);
         range.setEnd(div.firstChild.firstChild.firstChild, 1);
+        assert(range.collapsed);
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        assert.equal(true, indent.queryState());
+      });
+
+      it('should return `true` when selection is collapsed within a BLOCKQUOTE with a BR', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<blockquote><p><br></p></blockquote>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div.firstChild.firstChild, 0);
+        range.setEnd(div.firstChild.firstChild, 0);
         assert(range.collapsed);
 
         var sel = window.getSelection();
