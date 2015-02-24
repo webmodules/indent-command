@@ -212,7 +212,12 @@ describe('IndentCommand', function () {
 
       it('should insert a BLOCKQUOTE element in between 2 other BLOCKQUOTE elements', function () {
         div = document.createElement('div');
-        div.innerHTML = '<div><blockquote><p>one</p></blockquote><p>two</p><blockquote><p>three</p></blockquote></div><div>foo!!!</div>';
+        div.innerHTML = '<div>' +
+                          '<blockquote><p>one</p></blockquote>' +
+                          '<p>two</p>' +
+                          '<blockquote><p>three</p></blockquote>' +
+                        '</div>' +
+                        '<div>foo!!!</div>';
         div.setAttribute('contenteditable', 'true');
         document.body.appendChild(div);
 
@@ -230,7 +235,12 @@ describe('IndentCommand', function () {
 
         indent.execute();
 
-        assert.equal('<div><blockquote><p>one</p></blockquote><blockquote><p>two</p></blockquote><blockquote><p>three</p></blockquote></div><div>foo!!!</div>', div.innerHTML);
+        assert.equal('<div>' +
+                       '<blockquote><p>one</p></blockquote>' +
+                       '<blockquote><p>two</p></blockquote>' +
+                       '<blockquote><p>three</p></blockquote>' +
+                     '</div>' +
+                     '<div>foo!!!</div>', div.innerHTML);
 
         // test that the Selection remains intact
         sel = window.getSelection();
