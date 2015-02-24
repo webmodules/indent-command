@@ -177,6 +177,51 @@ describe('IndentCommand', function () {
         assert(range.endOffset === 4);
       });
 
+      it('should insert a single BLOCKQUOTE element around 6 P blocks', function () {
+        div = document.createElement('div');
+        div.innerHTML = '<p>asfd</p>' +
+                        '<p>asdf</p>' +
+                        '<p>fss</p>' +
+                        '<p>afdasfd</p>' +
+                        '<p>asfasf</p>' +
+                        '<p>sadfas</p>';
+        div.setAttribute('contenteditable', 'true');
+        document.body.appendChild(div);
+
+        // set current selection
+        var range = document.createRange();
+        range.setStart(div, 0);
+        range.setEnd(div, 6);
+        assert(!range.collapsed);
+        assert.equal('asfdasdffssafdasfdasfasfsadfas', range.toString());
+
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        var indent = new IndentCommand();
+
+        indent.execute();
+        assert.equal('<blockquote>' +
+                       '<p>asfd</p>' +
+                       '<p>asdf</p>' +
+                       '<p>fss</p>' +
+                       '<p>afdasfd</p>' +
+                       '<p>asfasf</p>' +
+                       '<p>sadfas</p>' +
+                     '</blockquote>', div.innerHTML);
+
+        // test that the Selection remains intact
+        sel = window.getSelection();
+        range = sel.getRangeAt(0);
+        assert(!range.collapsed);
+        assert.equal('asfdasdffssafdasfdasfasfsadfas', range.toString());
+        assert(range.startContainer === div);
+        assert(range.startOffset === 0);
+        assert(range.endContainer === div);
+        assert(range.endOffset === 1);
+      });
+
       it('should insert a second BLOCKQUOTE element when executed twice around multiple P blocks', function () {
         div = document.createElement('div');
         div.innerHTML = '<p>wat</p><p>hel<b>lo</b></p><p>world!</p><p>woah</p>';
