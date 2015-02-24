@@ -85,21 +85,6 @@ declare module "dom-iterator" {
   export = Iterator;
 }
 
-declare module "frozen-range" {
-  class FrozenRange {
-    // XXX: these 4 properties aren't technically "public", but indent-command
-    // modifies these properties in some cases so we have to lie here
-    public startPath;
-    public startOffset;
-    public endPath;
-    public endOffset;
-
-    constructor(range: Range, reference: Node);
-    public thaw(reference: Node, range?: Range): Range;
-  }
-  export = FrozenRange;
-}
-
 declare module "range-iterator" {
   import DomIterator = require('dom-iterator');
   class RangeIterator extends DomIterator {
