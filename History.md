@@ -1,4 +1,14 @@
 
+3.0.2 / 2015-03-09
+==================
+
+  * fix failing test case
+  * update to "range-iterator" v2.0.0 API
+  * package: allow any "zuul" v2
+  * test: add a failing test case
+  * test: make HTML string more readable
+  * types: remove "frozen-range" type def
+
 3.0.1 / 2015-02-23
 ==================
 
