@@ -87,6 +87,14 @@ class IndentCommand extends AbstractCommand {
       }
     }
 
+    if (startContainer.firstChild === blockquote) {
+      startContainer = blockquote;
+    }
+
+    if (endContainer.firstChild === blockquote) {
+      endContainer = blockquote;
+    }
+
     range.setStart(startContainer, startOffset);
     range.setEnd(endContainer, endOffset);
   }

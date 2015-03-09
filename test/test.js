@@ -202,6 +202,7 @@ describe('IndentCommand', function () {
         var indent = new IndentCommand();
 
         indent.execute();
+
         assert.equal('<blockquote>' +
                        '<p>asfd</p>' +
                        '<p>asdf</p>' +
@@ -216,10 +217,10 @@ describe('IndentCommand', function () {
         range = sel.getRangeAt(0);
         assert(!range.collapsed);
         assert.equal('asfdasdffssafdasfdasfasfsadfas', range.toString());
-        assert(range.startContainer === div);
+        assert(range.startContainer === div.firstChild);
         assert(range.startOffset === 0);
-        assert(range.endContainer === div);
-        assert(range.endOffset === 1);
+        assert(range.endContainer === div.firstChild);
+        assert(range.endOffset === 6);
       });
 
       it('should insert a second BLOCKQUOTE element when executed twice around multiple P blocks', function () {
