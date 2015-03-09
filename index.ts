@@ -76,17 +76,14 @@ class IndentCommand extends AbstractCommand {
     var endOffset = range.endOffset;
 
     var blockquote: HTMLElement = this.createElement();
-    var next: Node;
 
     if (range.collapsed) {
       this.wrapNode(range.endContainer, blockquote, blocks);
     } else {
-      var iterator = new RangeIterator(range)
-        .select( (node) => (node.childNodes.length === 0 && contains(this.root, node)) )
-        .revisit(false);
-
-      while (next = iterator.next()) {
-        this.wrapNode(next, blockquote, blocks);
+      var next;
+      var iterator = RangeIterator(range, (node) => (node.childNodes.length === 0 && contains(this.root, node)));
+      while (!(next = iterator.next()).done) {
+        this.wrapNode(next.value, blockquote, blocks);
       }
     }
 
@@ -100,15 +97,13 @@ class IndentCommand extends AbstractCommand {
       blockquote = closest(range.endContainer, 'blockquote', true, this.root);
       return !!blockquote;
     } else {
-      var next: Node;
+      var next;
       var count: number = 0;
-      var iterator = new RangeIterator(range)
-        .select( (node) => (node.childNodes.length === 0 && contains(this.root, node)) )
-        .revisit(false);
+      var iterator = RangeIterator(range, (node) => (node.childNodes.length === 0 && contains(this.root, node)));
 
-      while (next = iterator.next()) {
+      while (!(next = iterator.next()).done) {
         count++;
-        blockquote = closest(next, 'blockquote', true, this.root);
+        blockquote = closest(next.value, 'blockquote', true, this.root);
         if (!blockquote) return false;
       }
 
